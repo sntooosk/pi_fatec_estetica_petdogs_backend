@@ -1,15 +1,15 @@
-import "dotenv/config";
-import app from "./app.js";
-import database from "./Config/database.js";
+import 'dotenv/config'
+import app from './app.js'
+import database from './config/database.js'
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
- async function startSever(): Promise<void>{
-    await database.connect;
+async function startServer(): Promise<void> {
+    await database.connect()
 
-        app.listen(PORT , () =>{
-    console.log(`Servidor Rodando no endereço: http://localhost:${PORT}`);
-    });
- }
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`)
+    })
+}
 
-startSever();
+startServer()

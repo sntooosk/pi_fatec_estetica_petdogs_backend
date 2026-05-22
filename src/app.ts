@@ -13,8 +13,8 @@ class App {
     }
      private midddlwares() :void{
        this. server.use(cors());
-       this.server.use(express.json());
-       this.server.use(express.urlencoded ({ extended : true}));
+       this.server.use(express.json({ limit: "10mb" }));
+       this.server.use(express.urlencoded({ extended: true, limit: "10mb" }));
      }
      private routes(): void{
        this.server.use("/api/v1", routes);

@@ -1,8 +1,14 @@
+import type { Types } from "mongoose"
+
 export interface ICliente {
     name: string
     email: string
-    telefone: string
+    telefone?: string
+    foto?: string
+    role: "cliente"
     senha: string
+    resetPasswordToken?: string
+    resetPasswordExpires?: Date
     createdAt: string
     updatedAt?: string
 }
@@ -10,7 +16,8 @@ export interface ICliente {
 export interface ICreateClienteDTO {
     name: string
     email: string
-    telefone: string
+    telefone?: string
+    foto?: string
     senha: string
 }
 
@@ -18,5 +25,10 @@ export interface IUpdateClienteDTO {
     name?: string
     email?: string
     telefone?: string
+    foto?: string
     senha?: string
+    resetPasswordToken?: string
+    resetPasswordExpires?: Date
 }
+
+export type ClienteDocumentId = Types.ObjectId | string

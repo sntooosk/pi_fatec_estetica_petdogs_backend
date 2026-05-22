@@ -1,12 +1,13 @@
 import { Router } from "express"
 import agendamentoController from "./agendamento.controller.js"
+import { ensureAuthenticated } from "../auth/auth.middlewares.js"
 
 const agendamentoRoutes = Router()
 
-agendamentoRoutes.post('/', agendamentoController.create)
-agendamentoRoutes.get('/', agendamentoController.getAll)
-agendamentoRoutes.get('/:id', agendamentoController.getById)
-agendamentoRoutes.put('/:id', agendamentoController.update)
-agendamentoRoutes.delete('/:id', agendamentoController.delete)
+agendamentoRoutes.use(ensureAuthenticated)
+agendamentoRoutes.post("/", agendamentoController.create)
+agendamentoRoutes.get("/", agendamentoController.getAll)
+agendamentoRoutes.patch("/:id/cancel", agendamentoController.cancel)
+agendamentoRoutes.delete("/:id", agendamentoController.cancel)
 
 export default agendamentoRoutes

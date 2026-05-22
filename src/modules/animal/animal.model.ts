@@ -3,16 +3,12 @@ import type { IAnimal } from "./animal.types.js"
 
 const animalSchema = new Schema<IAnimal>(
     {
-        id_animal: {
-            type: Number,
-            required: true,
-        },
         nome: {
             type: String,
             required: true,
             trim: true,
         },
-        especie: {
+        raca: {
             type: String,
             required: true,
             trim: true,
@@ -20,11 +16,23 @@ const animalSchema = new Schema<IAnimal>(
         idade: {
             type: Number,
             required: true,
+            min: 0,
         },
         porte: {
             type: String,
             required: true,
             trim: true,
+            enum: ["pequeno", "medio", "grande"],
+        },
+        foto: {
+            type: String,
+            trim: true,
+        },
+        cliente: {
+            type: Schema.Types.ObjectId,
+            ref: "Cliente",
+            required: true,
+            index: true,
         },
     },
     { timestamps: true }

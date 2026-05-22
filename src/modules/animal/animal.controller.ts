@@ -1,60 +1,73 @@
-import type { Request, Response } from "express"
+import type { Response } from "express"
 import animalService from "./animal.service.js"
+import type { AuthenticatedRequest } from "../../types/request.types.js"
 
 class AnimalController {
+    public async create(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const { nome, name, raca, breed, idade, age, porte, size, foto, cliente, clienteId } = req.body ?? {}
+            const animal = await animalService.create({
+                nome: nome ?? name,
+                raca: raca ?? breed,
+                idade: idade ?? age,
+                porte: porte ?? size,
+                foto,
+                cliente: req.user?.role === "admin" ? cliente ?? clienteId : req.user?.id ?? "",
+            })
 
-    async create(req: Request, res: Response): Promise<Response> {
-        const { id_animal, nome, especie, idade, porte } = req.body ?? {}
-
-        const animal = await animalService.create({
-            id_animal,
-            nome,
-            especie,
-            idade,
-            porte
-        })
-
-        return res.status(201).json(animal)
+            return res.status(201).json(animal)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao cadastrar pet"
+            return res.status(400).json({ message })
+        }
     }
 
-    async getAll(req: Request, res: Response): Promise<Response> {
-        const animais = await animalService.getAll()
+    public async getAll(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        const animais = await animalService.getAll({ id: req.user?.id ?? "", role: req.user?.role ?? "cliente" })
 
         return res.status(200).json(animais)
     }
 
-    async getById(req: Request<{ id: string }>, res: Response): Promise<Response> {
-        const id = req.params.id
+    public async getById(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const animal = await animalService.getById(String(req.params.id ?? ""), { id: req.user?.id ?? "", role: req.user?.role ?? "cliente" })
 
-        const animal = await animalService.getById(id)
-
-        return res.status(200).json(animal)
+            return res.status(200).json(animal)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao buscar pet"
+            return res.status(404).json({ message })
+        }
     }
 
-    async update(req: Request<{ id: string }>, res: Response): Promise<Response> {
-        const id = req.params.id
+    public async update(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const { nome, name, raca, breed, idade, age, porte, size, foto, cliente, clienteId } = req.body ?? {}
+            const animal = await animalService.update(String(req.params.id ?? ""), { id: req.user?.id ?? "", role: req.user?.role ?? "cliente" }, {
+                nome: nome ?? name,
+                raca: raca ?? breed,
+                idade: idade ?? age,
+                porte: porte ?? size,
+                foto,
+                cliente: cliente ?? clienteId,
+            })
 
-        const { id_animal, nome, especie, idade, porte } = req.body ?? {}
-
-        const animal = await animalService.update(id, {
-            id_animal,
-            nome,
-            especie,
-            idade,
-            porte
-        })
-
-        return res.status(200).json(animal)
+            return res.status(200).json(animal)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao atualizar pet"
+            return res.status(400).json({ message })
+        }
     }
 
-    async delete(req: Request<{ id: string }>, res: Response): Promise<Response> {
-        const id = req.params.id
+    public async delete(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const animal = await animalService.delete(String(req.params.id ?? ""), { id: req.user?.id ?? "", role: req.user?.role ?? "cliente" })
 
-        const animal = await animalService.delete(id)
-
-        return res.status(200).json(animal)
+            return res.status(200).json(animal)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao remover pet"
+            return res.status(400).json({ message })
+        }
     }
-
 }
 
 export default new AnimalController()

@@ -11,17 +11,37 @@ const clienteSchema = new Schema<ICliente>(
         email: {
             type: String,
             required: true,
-            trim: true
+            unique: true,
+            lowercase: true,
+            trim: true,
         },
         senha: {
             type: String,
             required: true,
-            trim: true
+            trim: true,
+            select: false,
         },
         telefone: {
             type: String,
+            trim: true,
+        },
+        foto: {
+            type: String,
+            trim: true,
+        },
+        role: {
+            type: String,
+            enum: ["cliente"],
+            default: "cliente",
             required: true,
-            trim: true
+        },
+        resetPasswordToken: {
+            type: String,
+            select: false,
+        },
+        resetPasswordExpires: {
+            type: Date,
+            select: false,
         },
     },
     { timestamps: true }

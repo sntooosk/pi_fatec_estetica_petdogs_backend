@@ -1,25 +1,29 @@
+import type { Types } from "mongoose"
+
 export interface IAnimal {
-    id_animal: number
     nome: string
-    especie: string
+    raca: string
     idade: number
     porte: string
+    foto?: string
+    cliente: Types.ObjectId | string
     createdAt: string
     updatedAt?: string
 }
 
 export interface ICreateAnimalDTO {
-    id_animal: number
     nome: string
-    especie: string
+    raca: string
     idade: number
     porte: string
+    foto?: string
+    cliente: string
 }
 
 export interface IUpdateAnimalDTO {
-    id_animal?: number
     nome?: string
-    especie?: string
+    raca?: string
     idade?: number
     porte?: string
+    foto?: string
 }

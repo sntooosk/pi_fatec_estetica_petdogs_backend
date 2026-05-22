@@ -1,64 +1,41 @@
-import type { Request, Response } from "express"
+import type { Response } from "express"
 import agendamentoService from "./agendamento.service.js"
+import type { AuthenticatedRequest } from "../../types/request.types.js"
 
 class AgendamentoController {
+    public async create(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const { data_hora, dateTime, animal, animalId, pet, petId, servico, servicoId, service, serviceId, profissional, profissionalId, professional, professionalId } = req.body ?? {}
+            const agendamento = await agendamentoService.create({
+                data_hora: data_hora ?? dateTime,
+                animal: animal ?? animalId ?? pet ?? petId,
+                servico: servico ?? servicoId ?? service ?? serviceId,
+                profissional: profissional ?? profissionalId ?? professional ?? professionalId,
+                cliente: req.user?.id ?? "",
+            })
 
-    async create(req: Request, res: Response): Promise<Response> {
-        const { data_hora, status } = req.body ?? {}
-
-        const agendamento = await agendamentoService.create({
-            data_hora,
-            status
-        })
-
-        return res.status(201).json(agendamento)
+            return res.status(201).json(agendamento)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao agendar serviço"
+            return res.status(400).json({ message })
+        }
     }
 
-    async getAll(req: Request, res: Response): Promise<Response> {
-        const agendamentos = await agendamentoService.getAll()
+    public async getAll(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        const agendamentos = await agendamentoService.getAll({ id: req.user?.id ?? "", role: req.user?.role ?? "cliente" })
 
         return res.status(200).json(agendamentos)
     }
 
-    async getById(req: Request, res: Response): Promise<Response> {
-        const idParam = req.params.id
+    public async cancel(req: AuthenticatedRequest, res: Response): Promise<Response> {
+        try {
+            const agendamento = await agendamentoService.cancel(String(req.params.id ?? ""), { id: req.user?.id ?? "", role: req.user?.role ?? "cliente" })
 
-        if (!idParam || Array.isArray(idParam)) {
-            return res.status(400).json({ message: "ID inválido" })
+            return res.status(200).json(agendamento)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao cancelar agendamento"
+            return res.status(400).json({ message })
         }
-
-        const agendamento = await agendamentoService.getById(idParam)
-
-        return res.status(200).json(agendamento)
-    }
-
-    async update(req: Request, res: Response): Promise<Response> {
-        const idParam = req.params.id
-
-        if (!idParam || Array.isArray(idParam)) {
-            return res.status(400).json({ message: "ID inválido" })
-        }
-
-        const { data_hora, status } = req.body ?? {}
-
-        const agendamento = await agendamentoService.update(idParam, {
-            data_hora,
-            status
-        })
-
-        return res.status(200).json(agendamento)
-    }
-
-    async delete(req: Request, res: Response): Promise<Response> {
-        const idParam = req.params.id
-
-        if (!idParam || Array.isArray(idParam)) {
-            return res.status(400).json({ message: "ID inválido" })
-        }
-
-        const agendamento = await agendamentoService.delete(idParam)
-
-        return res.status(200).json(agendamento)
     }
 }
 

@@ -1,13 +1,16 @@
-import {  Router } from "express"
+import { Router } from "express"
 import clienteController from "./cliente.controller.js"
+import { ensureAuthenticated, ensureRoles } from "../auth/auth.middlewares.js"
 
 const clienteRoutes = Router()
 
-// Define your routes here, for example:
-clienteRoutes.post('/', clienteController.create)
-clienteRoutes.get('/', clienteController.getAll)
-clienteRoutes.get('/:id', clienteController.getById)
-clienteRoutes.put('/:id', clienteController.update)
-clienteRoutes.delete('/:id', clienteController.delete)
+clienteRoutes.use(ensureAuthenticated)
+clienteRoutes.get("/me", ensureRoles(["cliente"]), clienteController.getMe)
+clienteRoutes.put("/me", ensureRoles(["cliente"]), clienteController.update)
+clienteRoutes.post("/", ensureRoles(["admin"]), clienteController.create)
+clienteRoutes.get("/", ensureRoles(["admin"]), clienteController.getAll)
+clienteRoutes.get("/:id", ensureRoles(["admin"]), clienteController.getById)
+clienteRoutes.put("/:id", ensureRoles(["admin"]), clienteController.update)
+clienteRoutes.delete("/:id", ensureRoles(["admin"]), clienteController.delete)
 
 export default clienteRoutes

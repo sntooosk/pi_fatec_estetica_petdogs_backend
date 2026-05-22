@@ -1,57 +1,58 @@
-/* 
-   ele será reponsavel por 
-    . criar categoria
-    . listar categoria
-    . buscar categoria por id
-    . atualizar  categoria
-    . excluir categoria
-
-
-
-    não recebe req e resp
-    não define rotas
-    não sabe nada de HTTP
-
-*/
-
-import servicoController from "./servico.controller.js";
-import Servico from "./servico.model.js";
-import type {
-  ICreateServicoDTO,
-  IUpdateServicoDTO
-} from "./servico.types.js";
+import Servico from "./servico.model.js"
+import type { ICreateServicoDTO, IUpdateServicoDTO } from "./servico.types.js"
 
 class ServicoService {
+    private validate(data: ICreateServicoDTO): void {
+        if (!data.name?.trim()) {
+            throw new Error("Nome do serviço é obrigatório")
+        }
 
+        if (!data.descricao?.trim()) {
+            throw new Error("Descrição do serviço é obrigatória")
+        }
 
-  public async create(data: ICreateServicoDTO) {
-    const servico = await Servico.create({
-      name: data.name,
-      duracao_min: data.duracao_min,
-      preco: data.preco
-    });
-    return servico;
-  }
+        if (!Number.isFinite(Number(data.duracao_min)) || Number(data.duracao_min) <= 0) {
+            throw new Error("Duração inválida")
+        }
 
-  public async findAll() {
-    return await Servico.find();
+        if (!Number.isFinite(Number(data.preco)) || Number(data.preco) < 0) {
+            throw new Error("Preço inválido")
+        }
+    }
 
-  }
+    public async create(data: ICreateServicoDTO) {
+        this.validate(data)
 
-  public async findById(id: string) {
-    return await Servico.findById(id);
+        return await Servico.create({
+            name: data.name.trim(),
+            descricao: data.descricao.trim(),
+            duracao_min: Number(data.duracao_min),
+            preco: Number(data.preco),
+        })
+    }
 
-  }
+    public async findAll() {
+        return await Servico.find().sort({ name: 1 })
+    }
 
-  public async delete(id: string) {
-    return await Servico.findByIdAndDelete(id);
-  }
+    public async findById(id: string) {
+        return await Servico.findById(id)
+    }
 
-  public async update(id: string, data: IUpdateServicoDTO) {
-    return await Servico.findByIdAndUpdate(id, data, {
+    public async delete(id: string) {
+        return await Servico.findByIdAndDelete(id)
+    }
 
-    })
-  }
+    public async update(id: string, data: IUpdateServicoDTO) {
+        const payload: IUpdateServicoDTO = {}
+
+        if (data.name !== undefined) payload.name = data.name.trim()
+        if (data.descricao !== undefined) payload.descricao = data.descricao.trim()
+        if (data.duracao_min !== undefined) payload.duracao_min = Number(data.duracao_min)
+        if (data.preco !== undefined) payload.preco = Number(data.preco)
+
+        return await Servico.findByIdAndUpdate(id, payload, { new: true })
+    }
 }
 
-export default new ServicoService();
+export default new ServicoService()

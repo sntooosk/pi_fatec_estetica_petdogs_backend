@@ -1,30 +1,32 @@
-import mongoose, { Schema } from "mongoose";
-import type { IServico } from "./servico.types.js";
-
+import mongoose, { Schema } from "mongoose"
+import type { IServico } from "./servico.types.js"
 
 const servicoSchema = new Schema<IServico>(
     {
         name: {
             type: String,
-            required: false,
-            trim: true
+            required: true,
+            trim: true,
+        },
+        descricao: {
+            type: String,
+            required: true,
+            trim: true,
         },
         duracao_min: {
             type: Number,
             required: true,
-            trim: true
+            min: 1,
         },
         preco: {
             type: Number,
             required: true,
-            trim: true
+            min: 0,
         },
     },
-    {
+    { timestamps: true }
+)
 
-        timestamps: true,
-    }
-);
-const Servico = mongoose.model<IServico>("Servico", servicoSchema);
+const Servico = mongoose.model<IServico>("Servico", servicoSchema)
 
-export default Servico;
+export default Servico

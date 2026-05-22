@@ -1,82 +1,46 @@
-import type { Request , Response} from"express";
-import servicoService from "./servico.service.js";
-/*
- lidar com HTTP
- Receber request 
- Devolver response
-*/
+import type { Request, Response } from "express"
+import servicoService from "./servico.service.js"
 
-class CategoryController {
+class ServicoController {
+    public async create(request: Request, response: Response): Promise<Response> {
+        try {
+            const { name, descricao, duracao_min, preco } = request.body ?? {}
+            const servico = await servicoService.create({ name, descricao, duracao_min, preco })
 
-    public async create( request:Request, response: Response): Promise<Response>{
-       // const name = request.body.name?? null;
-        const {id,name, duracao_min,preco} = request.body ?? {};
-
-        const category = await servicoService.create({
-            name: request.body.name,
-            duracao_min: request.body.duracao_min,
-            preco: request.body.preco
-        });
-        
-        return response.status(201).json(category);
-    }
-    public async findAll( request:Request, response: Response):Promise<Response>{
-       const categories = await servicoService.findAll();
-
-       return response.status(200).json(categories);
-   
-    }
-
-    public async delete(request:Request, response: Response):Promise<Response>{
-        const {id} = request.params;
-
-        if(!id || typeof id!== "string"){
-            return response.status(400).json({
-                message :"id invalido",
-            });
+            return response.status(201).json(servico)
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro ao cadastrar serviço"
+            return response.status(400).json({ message })
         }
-
-        await servicoService.delete(id);
-        return response.status(200).json({
-            message:"cadastrado com sucesso!",
-        });
-    }
-    public async findById(request:Request, response: Response):Promise<Response>{
-        const {id} = request.params;
-
-        if(!id || typeof id!== "string"){
-            return response.status(400).json({
-                message :"id invalido",
-            });
-        }
-
-        const  category = await servicoService.findById(id);
-
-        return response.status(200).json(category);
     }
 
-    public async update( request:Request, response: Response):Promise<Response>{
-       const {id} = request.params;
-       const {name, description, active} = request.body;
-       const teste = request.query.teste ?? "Não foi enviado";
+    public async findAll(request: Request, response: Response): Promise<Response> {
+        const servicos = await servicoService.findAll()
 
-       console.log("valor  de teste", teste);
-
-       if(id || typeof id !== "string"){
-        return response.status(400).json({
-           message: "Id invalido"
-        });
-       }
-       const category = await servicoService.update(id, {
-        id: request.body.id,
-        name: request.body.name,
-        duracao_min: request.body.duracao_min,
-        preco: request.body.preco
-       });
-
-       return response.status(200).json(category);
-   
+        return response.status(200).json(servicos)
     }
 
+    public async delete(request: Request, response: Response): Promise<Response> {
+        const id = String(request.params.id ?? "")
+        await servicoService.delete(id)
+
+        return response.status(200).json({ message: "Serviço removido com sucesso" })
+    }
+
+    public async findById(request: Request, response: Response): Promise<Response> {
+        const id = String(request.params.id ?? "")
+        const servico = await servicoService.findById(id)
+
+        return response.status(200).json(servico)
+    }
+
+    public async update(request: Request, response: Response): Promise<Response> {
+        const id = String(request.params.id ?? "")
+        const { name, descricao, duracao_min, preco } = request.body ?? {}
+        const servico = await servicoService.update(id, { name, descricao, duracao_min, preco })
+
+        return response.status(200).json(servico)
+    }
 }
-export default new CategoryController();
+
+export default new ServicoController()

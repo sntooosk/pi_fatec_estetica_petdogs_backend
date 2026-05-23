@@ -21,6 +21,12 @@ export interface ICreateAgendamentoDTO {
     profissional: string
 }
 
+export interface IAvailabilityQuery {
+    profissionalId: string
+    servicoId: string
+    date: string
+}
+
 export interface IUpdateAgendamentoDTO {
     data_hora?: Date | string
     status?: AgendamentoStatus

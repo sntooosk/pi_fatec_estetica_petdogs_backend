@@ -64,7 +64,7 @@ class AuthService {
         return `${unsignedToken}.${signature}`
     }
 
-    private buildSession(user: { id: string; name: string; email: string; role: UserRole }) {
+    private buildSession(user: { id: string; name: string; email: string; role: UserRole; foto?: string }) {
         return {
             user,
             token: this.createToken({ sub: user.id, name: user.name, email: user.email, role: user.role }),
@@ -142,7 +142,7 @@ class AuthService {
 
         const cliente = await Cliente.create(clientePayload)
 
-        return this.buildSession({ id: cliente.id, name: cliente.name, email: cliente.email, role: "cliente" })
+        return this.buildSession({ id: cliente.id, name: cliente.name, email: cliente.email, role: "cliente", foto: cliente.foto })
     }
 
     public async login(data: ILoginDTO) {
@@ -159,7 +159,7 @@ class AuthService {
         const profissional = await Profissional.findOne({ email }).select("+senha")
 
         if (profissional?.senha && (await this.comparePassword(data.password, profissional.senha))) {
-            return this.buildSession({ id: profissional.id, name: profissional.name, email: profissional.email, role: "profissional" })
+            return this.buildSession({ id: profissional.id, name: profissional.name, email: profissional.email, role: "profissional", foto: profissional.foto })
         }
 
         const cliente = await Cliente.findOne({ email }).select("+senha")
@@ -168,7 +168,7 @@ class AuthService {
             throw new Error("Credenciais inválidas")
         }
 
-        return this.buildSession({ id: cliente.id, name: cliente.name, email: cliente.email, role: "cliente" })
+        return this.buildSession({ id: cliente.id, name: cliente.name, email: cliente.email, role: "cliente", foto: cliente.foto })
     }
 
     public async forgotPassword(data: IForgotPasswordDTO) {

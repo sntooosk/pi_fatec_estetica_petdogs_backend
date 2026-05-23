@@ -5,8 +5,8 @@ import type { AuthenticatedRequest } from "../../types/request.types.js"
 class ProfissionalController {
     async create(req: AuthenticatedRequest, res: Response): Promise<Response> {
         try {
-            const { name, email, senha, password, telefone, foto, especialidade, disponibilidade_inicio, disponibilidade_fim } = req.body ?? {}
-            const profissional = await profissionalService.create({ name, email, senha: senha ?? password, telefone, foto, especialidade, disponibilidade_inicio, disponibilidade_fim })
+            const { name, email, senha, password, telefone, foto, especialidade, dias_trabalho, horario_inicio, horario_fim, almoco_inicio, almoco_fim, disponibilidade_inicio, disponibilidade_fim } = req.body ?? {}
+            const profissional = await profissionalService.create({ name, email, senha: senha ?? password, telefone, foto, especialidade, dias_trabalho, horario_inicio, horario_fim, almoco_inicio, almoco_fim, disponibilidade_inicio, disponibilidade_fim })
 
             return res.status(201).json(profissional)
         } catch (error) {
@@ -30,8 +30,8 @@ class ProfissionalController {
 
     async update(req: AuthenticatedRequest, res: Response) {
         const id = req.user?.role === "profissional" ? req.user.id : String(req.params.id ?? "")
-        const { name, email, senha, password, telefone, foto, especialidade, disponibilidade_inicio, disponibilidade_fim } = req.body ?? {}
-        const profissional = await profissionalService.update(id, { name, email, senha: senha ?? password, telefone, foto, especialidade, disponibilidade_inicio, disponibilidade_fim })
+        const { name, email, senha, password, telefone, foto, especialidade, dias_trabalho, horario_inicio, horario_fim, almoco_inicio, almoco_fim, disponibilidade_inicio, disponibilidade_fim } = req.body ?? {}
+        const profissional = await profissionalService.update(id, { name, email, senha: senha ?? password, telefone, foto, especialidade, dias_trabalho, horario_inicio, horario_fim, almoco_inicio, almoco_fim, disponibilidade_inicio, disponibilidade_fim })
 
         return res.status(200).json(profissional)
     }

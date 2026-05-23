@@ -40,13 +40,33 @@ const profissionalSchema = new Schema<IProfissional>(
             required: true,
             trim: true,
         },
+        dias_trabalho: {
+            type: [Number],
+            default: [1, 2, 3, 4, 5],
+        },
+        horario_inicio: {
+            type: String,
+            default: "08:00",
+            trim: true,
+        },
+        horario_fim: {
+            type: String,
+            default: "18:00",
+            trim: true,
+        },
+        almoco_inicio: {
+            type: String,
+            trim: true,
+        },
+        almoco_fim: {
+            type: String,
+            trim: true,
+        },
         disponibilidade_inicio: {
             type: Date,
-            required: true,
         },
         disponibilidade_fim: {
             type: Date,
-            required: true,
         },
     },
     { timestamps: true }

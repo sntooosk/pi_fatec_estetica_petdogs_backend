@@ -6,8 +6,13 @@ export interface IProfissional {
     foto?: string
     role: "profissional"
     especialidade: string
-    disponibilidade_inicio: Date
-    disponibilidade_fim: Date
+    dias_trabalho: number[]
+    horario_inicio: string
+    horario_fim: string
+    almoco_inicio?: string
+    almoco_fim?: string
+    disponibilidade_inicio?: Date
+    disponibilidade_fim?: Date
     createdAt: string
     updatedAt?: string
 }
@@ -19,8 +24,13 @@ export interface ICreateProfissionaleDTO {
     telefone?: string
     foto?: string
     especialidade: string
-    disponibilidade_inicio: Date | string
-    disponibilidade_fim: Date | string
+    dias_trabalho?: number[] | string
+    horario_inicio?: string
+    horario_fim?: string
+    almoco_inicio?: string
+    almoco_fim?: string
+    disponibilidade_inicio?: Date | string
+    disponibilidade_fim?: Date | string
 }
 
 export interface IUpdateProfissionalDTO {
@@ -30,6 +40,11 @@ export interface IUpdateProfissionalDTO {
     telefone?: string
     foto?: string
     especialidade?: string
+    dias_trabalho?: number[] | string
+    horario_inicio?: string
+    horario_fim?: string
+    almoco_inicio?: string
+    almoco_fim?: string
     disponibilidade_inicio?: Date | string
     disponibilidade_fim?: Date | string
 }

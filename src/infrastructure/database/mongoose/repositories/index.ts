@@ -1,0 +1,6 @@
+export { agendamentoRepository } from "./agendamento.repository.js"
+export { animalRepository } from "./animal.repository.js"
+export { clienteRepository } from "./cliente.repository.js"
+export { profissionalRepository } from "./profissional.repository.js"
+export { relatorioRepository } from "./relatorio.repository.js"
+export { servicoRepository } from "./servico.repository.js"

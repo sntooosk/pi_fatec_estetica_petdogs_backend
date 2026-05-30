@@ -1,10 +1,11 @@
 import { Router } from "express"
-import agendamentoRoutes from "./modules/agendamento/agendamento.routes.js"
-import animalRoutes from "./modules/animal/animal.routes.js"
-import authRoutes from "./modules/auth/auth.routes.js"
-import clienteRoutes from "./modules/cliente/cliente.routes.js"
-import profissionalRoutes from "./modules/profissional/profissional.routes.js"
-import servicoRoutes from "./modules/servico/servico.routes.js"
+import agendamentoRoutes from "./adapters/http/routes/agendamento.routes.js"
+import animalRoutes from "./adapters/http/routes/animal.routes.js"
+import authRoutes from "./adapters/http/routes/auth.routes.js"
+import clienteRoutes from "./adapters/http/routes/cliente.routes.js"
+import profissionalRoutes from "./adapters/http/routes/profissional.routes.js"
+import relatorioRoutes from "./adapters/http/routes/relatorio.routes.js"
+import servicoRoutes from "./adapters/http/routes/servico.routes.js"
 
 const routes = Router()
 
@@ -21,5 +22,6 @@ routes.use("/animais", animalRoutes)
 routes.use("/servicos", servicoRoutes)
 routes.use("/agendamentos", agendamentoRoutes)
 routes.use("/profissionais", profissionalRoutes)
+routes.use("/relatorios", relatorioRoutes)
 
 export default routes
